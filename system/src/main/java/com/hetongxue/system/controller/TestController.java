@@ -1,5 +1,6 @@
 package com.hetongxue.system.controller;
 
+import com.hetongxue.configuration.redis.utils.RedisUtils;
 import com.hetongxue.response.Result;
 import com.hetongxue.system.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,9 @@ public class TestController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private RedisUtils redisUtils;
+
     @GetMapping("/hello")
     public Result Test() {
         return Result.Success().setMessage("hello word!");
@@ -29,6 +33,12 @@ public class TestController {
     @GetMapping("/datasource")
     public Result TestDatasource() {
         return Result.Success(userService.getUserAll());
+    }
+
+    @GetMapping("/redis")
+    public Result TestRedis() {
+        redisUtils.setValue("test", 123456);
+        return Result.Success(redisUtils.getValue("test"));
     }
 
 }
