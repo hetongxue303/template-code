@@ -37,5 +37,37 @@ public class User extends PublicProperty implements Serializable {
      * 用户密码
      */
     private String password;
+    /**
+     * 用户昵称
+     */
+    private String nickName;
+    /**
+     * 真实姓名
+     */
+    private String realName;
+    /**
+     * 用户电话
+     */
+    private String phone;
+    /**
+     * 用户邮箱
+     */
+    private String email;
+    /**
+     * 用户性别(0:男(默认) 1:女 2:保密)
+     */
+    private String gender;
+    /**
+     * 用户简介
+     */
+    private String Introduction;
+    /**
+     * 用户头像地址
+     */
+    private String avatarPath;
+    /**
+     * 账户状态(0:不可用 1:可用(默认))
+     */
+    private boolean status;
 
 }
