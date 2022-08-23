@@ -2,6 +2,7 @@ package com.hetongxue.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hetongxue.system.domain.User;
+import com.hetongxue.system.domain.dto.LoginDto;
 
 import java.util.List;
 
@@ -14,5 +15,7 @@ import java.util.List;
 public interface UserService extends IService<User> {
 
     List<User> getUserAll();
+
+    User login(LoginDto login);
 
 }

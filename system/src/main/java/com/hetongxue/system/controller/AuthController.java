@@ -3,10 +3,11 @@ package com.hetongxue.system.controller;
 import com.hetongxue.configuration.redis.utils.RedisUtils;
 import com.hetongxue.lang.Const;
 import com.hetongxue.response.Result;
+import com.hetongxue.system.domain.User;
+import com.hetongxue.system.domain.dto.LoginDto;
+import com.hetongxue.system.service.UserService;
 import com.wf.captcha.ArithmeticCaptcha;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +25,12 @@ public class AuthController {
     @Resource
     private RedisUtils redisUtils;
 
+    @Resource
+    private UserService userService;
+
+    /**
+     * 获取验证码
+     */
     @GetMapping("/getCode")
     public Result getCode() {
         // 在java11中使用Nashorn engine  会出现 Warning: Nashorn engine is planned to be removed from a future JDK release
@@ -32,6 +39,15 @@ public class AuthController {
         redisUtils.setValue(Const.CAPTCHA_KEY, captcha.text(), 60, TimeUnit.SECONDS);// 设置60秒过期
         System.out.println("验证码:" + captcha.text());
         return Result.Success(captcha.toBase64());
+    }
+
+    /**
+     * 用户登录
+     */
+    @PostMapping("/login")
+    public Result login(LoginDto login) {
+        User user = userService.login(login);
+        return user != null ? Result.Success(user).setMessage("登陆成功") : Result.Error(null).setMessage("登陆失败");
     }
 
 }
