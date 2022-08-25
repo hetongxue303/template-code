@@ -1,17 +1,17 @@
 package com.hetongxue.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hetongxue.configuration.redis.utils.RedisUtils;
-import com.hetongxue.lang.Const;
 import com.hetongxue.system.domain.User;
-import com.hetongxue.system.domain.dto.LoginDto;
 import com.hetongxue.system.mapper.UserMapper;
 import com.hetongxue.system.service.UserService;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @Description: 用户业务实现
@@ -26,21 +26,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Resource
     private UserMapper userMapper;
 
-    @Resource
-    private RedisUtils redisUtils;
-
     @Override
-    public List<User> getUserAll() {
-        return userMapper.selectList(null);
-    }
-
-    @Override
-    public User login(LoginDto login) {
-        String value = (String) redisUtils.getValue(Const.CAPTCHA_KEY);
-        if (value.equals(login.getCode())) {
-            return null;
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+        if (ObjectUtils.isEmpty(user)) {
+            throw new UsernameNotFoundException("用户名或密码错误");
         }
-        return null;
+        return user;
     }
 
 }

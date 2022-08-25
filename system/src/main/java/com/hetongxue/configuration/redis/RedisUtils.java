@@ -1,4 +1,4 @@
-package com.hetongxue.configuration.redis.utils;
+package com.hetongxue.configuration.redis;
 
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.RedisTemplate;
