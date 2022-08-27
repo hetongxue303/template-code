@@ -1,7 +1,7 @@
 
 package com.hetongxue.configuration.security.exception;
 
-import javax.naming.AuthenticationException;
+import org.springframework.security.core.AuthenticationException;
 
 /**
  * @Description: 验证码异常类

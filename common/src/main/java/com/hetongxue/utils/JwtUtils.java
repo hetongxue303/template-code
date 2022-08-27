@@ -28,15 +28,12 @@ public class JwtUtils {
     /**
      * 生成JWT
      */
-    public String generateToken(Long id, String username) {
+    public String generateToken(String username) {
         return Jwts.builder()
                 // 设置头部信息
                 .setHeaderParam("typ", "JWT")
-                .setHeaderParam("alg", "HS2256")
                 // 设置主题
                 .setSubject(username)
-                // 设置用户名
-                .claim("username", username)
                 // 设置发行时间
                 .setIssuedAt(new Date())
                 // 设置过期时间(claim设置在过期时间之前 否则可能会出现过期时间不生效问题)

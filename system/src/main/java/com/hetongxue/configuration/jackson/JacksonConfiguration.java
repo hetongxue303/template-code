@@ -96,7 +96,7 @@ public class JacksonConfiguration {
         return new Converter<String, Date>() {
             @Override
             public Date convert(String source) {
-                long longTimeStamp = new Long(source);
+                long longTimeStamp = Long.parseLong(source);
                 return new Date(longTimeStamp);
             }
         };

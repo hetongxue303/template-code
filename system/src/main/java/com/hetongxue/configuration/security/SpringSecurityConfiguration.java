@@ -1,6 +1,8 @@
 package com.hetongxue.configuration.security;
 
+import com.hetongxue.configuration.security.filter.JwtAuthenticationFilter;
 import com.hetongxue.configuration.security.handler.*;
+import com.hetongxue.constant.Base;
 import com.hetongxue.system.service.impl.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -39,6 +42,8 @@ public class SpringSecurityConfiguration {
     private CustomizeAuthenticationEntryPoint authenticationEntryPoint;
     @Resource
     private CustomizeExpiredSessionStrategy expiredSessionStrategy;
+    @Resource
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     /**
      * 配置参数
@@ -48,8 +53,7 @@ public class SpringSecurityConfiguration {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final Integer MAXIMUM_SESSIONS = 1;
-    public static final String CAPTCHA_KEY = "captcha";
-    public static final String AUTHORIZATION_KEY = "authorization";
+    public static final String AUTHORIZATION_KEY = Base.AUTHORIZATION_KEY;
     public static final String CODE_KEY = "code";
     public static final String REMEMBER_ME_KEY = "rememberMe";
 
@@ -110,10 +114,8 @@ public class SpringSecurityConfiguration {
                 // 设置阻止登录策略 true:禁止再次登录  false(默认):登陆时会将前一次登录的设备挤下线
                 .maxSessionsPreventsLogin(true);
 
-        // 添加jwt自动登录过滤器
-//        http.addFilter(jwtAuthenticationFilter())
-//                // 添加在UsernamePasswordAuthenticationFilter之前的captchaFilter(登陆之前)
-//                .addFilterBefore(captchaFilter, UsernamePasswordAuthenticationFilter.class);
+        // 添加在UsernamePasswordAuthenticationFilter之前的captchaFilter(登陆之前)
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.httpBasic(Customizer.withDefaults()).build();
     }

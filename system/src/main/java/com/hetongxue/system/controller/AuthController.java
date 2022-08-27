@@ -1,9 +1,8 @@
 package com.hetongxue.system.controller;
 
 import com.hetongxue.configuration.redis.RedisUtils;
-import com.hetongxue.lang.Const;
+import com.hetongxue.constant.Base;
 import com.hetongxue.response.Result;
-import com.hetongxue.system.service.UserService;
 import com.wf.captcha.ArithmeticCaptcha;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +24,6 @@ public class AuthController {
     @Resource
     private RedisUtils redisUtils;
 
-    @Resource
-    private UserService userService;
-
     /**
      * 获取验证码
      */
@@ -36,8 +32,8 @@ public class AuthController {
         // 在java11中使用Nashorn engine  会出现 Warning: Nashorn engine is planned to be removed from a future JDK release
         System.setProperty("nashorn.args", "--no-deprecation-warning");// 解决上诉问题设置
         ArithmeticCaptcha captcha = new ArithmeticCaptcha(111, 36, 2);
-        redisUtils.setValue(Const.CAPTCHA_KEY, captcha.text(), 60, TimeUnit.SECONDS);// 设置60秒过期
-        System.out.println("验证码:" + captcha.text());
+        redisUtils.setValue(Base.CAPTCHA_KEY, captcha.text(), 60, TimeUnit.SECONDS);// 设置60秒过期
+        System.out.println("验证码：" + captcha.text());
         return Result.Success(captcha.toBase64());
     }
 

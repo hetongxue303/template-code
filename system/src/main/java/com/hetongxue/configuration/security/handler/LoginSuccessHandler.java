@@ -3,7 +3,6 @@ package com.hetongxue.configuration.security.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hetongxue.configuration.redis.RedisUtils;
 import com.hetongxue.configuration.security.SpringSecurityConfiguration;
-import com.hetongxue.lang.Const;
 import com.hetongxue.response.Result;
 import com.hetongxue.system.domain.User;
 import com.hetongxue.utils.JwtUtils;
@@ -42,11 +41,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         // 获取当前用户信息
         User user = (User) authentication.getPrincipal();
         // 生成token
-        String token = jwtUtils.generateToken(user.getId(), user.getUsername());
+        String token = jwtUtils.generateToken(user.getUsername());
         // 将token存于redis中(默认3天)
         redisUtils.setValue(SpringSecurityConfiguration.AUTHORIZATION_KEY, token, 7, TimeUnit.DAYS);
         // 将token设置在请求头上
-        response.setHeader(Const.AUTHORIZATION_KEY, token);
+        response.setHeader(SpringSecurityConfiguration.AUTHORIZATION_KEY, token);
         // 自定义返回内容
         response.getWriter().println(new ObjectMapper().writeValueAsString(Result.Success(user).setMessage("登陆成功")));
     }
